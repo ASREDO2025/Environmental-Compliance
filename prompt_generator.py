@@ -44,17 +44,22 @@ def generate_optimized_prompts(raw_text: str) -> str:
 def main():
     print("Prompt Generator Agent")
     print("=" * 40)
-    print("Enter your raw text (press Enter twice when done):")
-    print()
-
-    lines = []
-    while True:
-        line = input()
-        if line == "" and lines and lines[-1] == "":
-            break
-        lines.append(line)
-
-    raw_text = "\n".join(lines).strip()
+    import sys
+    if not sys.stdin.isatty():
+        raw_text = sys.stdin.read().strip()
+    else:
+        print("Enter your raw text (press Enter twice when done):")
+        print()
+        lines = []
+        while True:
+            try:
+                line = input()
+            except EOFError:
+                break
+            if line == "" and lines and lines[-1] == "":
+                break
+            lines.append(line)
+        raw_text = "\n".join(lines).strip()
 
     if not raw_text:
         print("No input provided.")
